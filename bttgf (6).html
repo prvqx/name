@@ -1,0 +1,539 @@
+<html>
+<head>
+<title>Attractiveness Rater !!</title>
+</head>
+
+<body bgcolor="#f0f0ff">
+
+<center>
+<h1 style="font-family: Times New Roman; color: purple;">Attractiveness Rater !!</h1>
+<hr color="purple" width="60%">
+</center>
+
+<!-- PAGE 1 intake -->
+<div id="page-intake">
+<center>
+<br>
+<h2 style="font-family: Times New Roman; color: darkblue;">Step 1 - Enter Your Info</h2>
+<p style="font-family: Arial; font-size: 14px;">please fill out all fields before clicking begin</p>
+<br>
+
+<table border="0" cellpadding="6">
+  <tr>
+    <td align="right"><b style="font-family: Arial; font-size:14px;">Your Name:</b></td>
+    <td><input type="text" id="inp-name" size="25" style="border: 2px solid purple; font-family: Arial; padding: 3px;"></td>
+  </tr>
+  <tr>
+    <td align="right"><b style="font-family: Arial; font-size:14px;">Your Age:</b></td>
+    <td><input type="number" id="inp-age" size="5" min="1" max="120" style="border: 2px solid purple; font-family: Arial; padding: 3px; width:60px;"></td>
+  </tr>
+  <tr>
+    <td align="right"><b style="font-family: Arial; font-size:14px;">Rate attractiveness of:</b></td>
+    <td>
+      <input type="radio" name="pref" id="pref-f" value="female" checked> <label for="pref-f" style="font-family:Arial; font-size:14px;">Women</label> &nbsp;
+      <input type="radio" name="pref" id="pref-m" value="male"> <label for="pref-m" style="font-family:Arial; font-size:14px;">Men</label> &nbsp;
+      <input type="radio" name="pref" id="pref-b" value="both"> <label for="pref-b" style="font-family:Arial; font-size:14px;">Both</label>
+    </td>
+  </tr>
+</table>
+
+<br>
+<p id="err-intake" style="color:red; font-family:Arial; font-size:13px; display:none;">!! please fill out your name and age !!</p>
+<br>
+
+<input type="button" value="Begin Assessment >>" onclick="startAssessment(event)"
+  style="background-color: purple; color: white; font-family: Times New Roman; font-size: 16px; padding: 8px 20px; border: none; cursor: pointer;">
+
+<br><br>
+<p style="font-family:Arial; font-size:11px; color:gray;">* this quiz will determine what type of person you are attracted to *</p>
+
+</center>
+</div>
+
+
+<!-- PAGE 2 photo rating -->
+<div id="page-photo" style="display:none;">
+<center>
+
+<br>
+<p style="font-family:Arial; font-size:13px; color:gray;" id="progress-label">Photo 1 of 28</p>
+
+<!-- progress bar -->
+<table border="1" cellspacing="0" cellpadding="0" width="500" style="border-color:#ccc;">
+  <tr>
+    <td id="progress-fill" style="background-color:purple; height:10px; width:4%;"></td>
+    <td style="background-color:#eee; height:10px;"></td>
+  </tr>
+</table>
+
+<br>
+<h2 id="photo-label" style="font-family: Times New Roman; color: darkblue;">Photo 1 of 28</h2>
+<p id="photo-sub" style="font-family:Arial; font-size:13px; color:#555;">Rate the attractiveness of the person below (1 = not attractive, 10 = very attractive)</p>
+
+<br>
+
+<!-- photo container - larger size -->
+<div id="photo-container" style="width:600px; height:480px; border: 3px solid purple; background-color:#222; display:flex; align-items:center; justify-content:center;">
+  <p style="font-family:Arial; color:#aaa; font-size:13px;">[photo]</p>
+</div>
+
+<br>
+
+<p style="font-family:Arial; font-size:13px;"><b>How attractive is this person?</b></p>
+<p style="font-family:Arial; font-size:11px; color:gray;">1 = not at all &nbsp;&nbsp;&nbsp; 10 = extremely</p>
+<br>
+
+<div id="scale-buttons">
+<!-- filled by js -->
+</div>
+
+<br>
+<p id="scale-note" style="font-family:Arial; font-size:12px; color:purple; font-style:italic;">-- nothing selected yet --</p>
+
+<p id="err-photo" style="color:red; font-family:Arial; font-size:13px; display:none;">!! you need to pick a number first !!</p>
+
+<br>
+<table width="600">
+  <tr>
+    <td align="left">
+      <input type="button" id="btn-back-photo" value="<< Back" onclick="prevPhoto()"
+        style="font-family:Arial; font-size:13px; padding:5px 12px; background:#ddd; border:1px solid #aaa; cursor:pointer;">
+    </td>
+    <td align="right">
+      <input type="button" id="btn-next-photo" value="Next >>" onclick="nextPhoto()"
+        style="font-family:Arial; font-size:13px; padding:5px 12px; background:purple; color:white; border:none; cursor:pointer;">
+    </td>
+  </tr>
+</table>
+
+</center>
+</div>
+
+
+<!-- PAGE 3 results -->
+<div id="page-result" style="display:none;">
+<center>
+
+<br>
+<h2 style="font-family: Times New Roman; color: purple;">Your Results !!</h2>
+<hr color="purple" width="50%">
+<br>
+
+<p style="font-family:Arial; font-size:13px; color:#555;" id="result-meta"></p>
+
+<br>
+
+<div style="border: 2px solid purple; padding: 15px; width: 340px; background-color: #f9f0ff;">
+  <p style="font-family:Arial; font-size:12px; color:gray;">Based on your ratings, your type is:</p>
+  <br>
+  <h2 id="verdict-type" style="font-family: Times New Roman; color: darkblue; font-size: 26px;">--</h2>
+  <br>
+  <p id="verdict-sub" style="font-family:Arial; font-size:12px; color:#555; font-style:italic;">--</p>
+</div>
+
+<br><br>
+
+<p style="font-family:Arial; font-size:13px; color:#333;"><b>Full Breakdown:</b></p>
+<br>
+
+<table id="score-table" border="1" cellpadding="6" cellspacing="0" width="340" style="border-color:#ccc; font-family:Arial; font-size:13px;">
+  <thead>
+    <tr style="background-color:#e8d5ff;">
+      <th>Type</th>
+      <th>Photos</th>
+      <th>Avg Score</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody id="score-tbody"></tbody>
+</table>
+
+<br><br>
+<input type="button" value="Start Over" onclick="restart()"
+  style="background-color:purple; color:white; font-family:Times New Roman; font-size:14px; padding:7px 18px; border:none; cursor:pointer;">
+<br><br>
+
+</center>
+</div>
+
+
+<script>
+
+// ============================================================
+// PHOTOS_A — Normal mode (regular click) — 35 photos
+// To update: fill in the src field with your image URL or path.
+// Tags group photos into types for the results breakdown.
+// NOTE: Photos 1-11 (index 0-10) are shuffled randomly each run.
+// ============================================================
+const PHOTOS_A = [
+  // --- goth (7 photos) ---
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520945680586244116/2299832ed591fd626448fe31ebeeed04.png?ex=6a430a8c&is=6a41b90c&hm=0730b73e9c4ede4d5fea18f766c3c032b16099b1f831b55982093f23603626d7&", tag: "goth" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520945717579874355/f78b4ec9b29d895f657775041d3e959f.png?ex=6a430a94&is=6a41b914&hm=0d7e6a1b8ea8ef05286d4253aac1f41bae4a24a429d265f8a18baf01a1a03cc9&", tag: "goth" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520945750505160855/2348f744747ed07445774b83ce2bb3a6.png?ex=6a430a9c&is=6a41b91c&hm=96e52daeadb06a018d25b418466b14c8296a8d6621d480bacdd34bd7e977e6bc&", tag: "goth" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520945801004584980/31b565b296223bf14e6dfc9c49561f39.png?ex=6a430aa8&is=6a41b928&hm=7d1f11da09ddf2aad7eb5eb845f9284000de218c184ffb08633eb26b31cea8f1&", tag: "goth" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520945841790124052/179705bf7ddd2f051dcba15a09436603.png?ex=6a430ab2&is=6a41b932&hm=d49a9cd779c0ecccad4d8da4536836e882922ff2a396b94702d03a81fecaad76&", tag: "goth" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520945874081939456/pretty-black-girl-5408950.png?ex=6a430aba&is=6a41b93a&hm=950152e03e95c575b45a3f5c44fc5341346a39139636f8f3a6736032282dbc1b&", tag: "goth" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520945911646126090/417e283332cd26c55f5a190be98056ab.png?ex=6a430ac3&is=6a41b943&hm=d3d5f6e2dd7319811fc81776a2212a790161da686f7415ef254f88c0181332f2&", tag: "goth" },
+
+  // --- preppy (7 photos) ---
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520945929115668590/images.png?ex=6a430ac7&is=6a41b947&hm=30e430b5ae191026886916b2037b2b150e7ff1d8c2f4b5dba1bed5d1f99ab14a&", tag: "preppy" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520945995314106581/dace0a9a3c6fd191d7d722d3dbf4c74b.png?ex=6a430ad7&is=6a41b957&hm=8cfce781571634bc247f4a0a8f636fe97f1cc62739eda9f5fa8e1cf5341c8854&", tag: "preppy" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520946040541413508/b6a8ac9bbb8ed946ba94abdcc0876ca9.png?ex=6a430ae1&is=6a41b961&hm=2696f31d022618762fa7f421817e2666f7621d52e9a5b3a411da0304094b69e3&", tag: "preppy" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520946071021293728/ea9d72546ecfe877d316a88577c70c30.png?ex=6a430ae9&is=6a41b969&hm=3d26bdd224a5197f2e9a322e1ab43864027f79ddd39b237620113be1c7274b2e&", tag: "preppy" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520946097772826796/fa4e5e3605f54b5069e42b82a3e704c5.png?ex=6a430aef&is=6a41b96f&hm=ab3b2ff2635cdecc84ae4e06d8c9d873b75c14cabc7f30e0ca93e60388f9901a&", tag: "preppy" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520946151136956457/c84f2f89302c0596b4c4f1da0839c1aa.png?ex=6a430afc&is=6a41b97c&hm=07ca79126375d7679c70277470f87ee97f079e68061b15803e159d7c888e7fc4&", tag: "preppy" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520957614446608495/bee9f28438865c6973cf8f364b9559f3.png?ex=6a4315a9&is=6a41c429&hm=52781487b23580049d7ff506d698c8a1529574c1bce4a6c44bc768a3f8977459&", tag: "preppy" },
+
+  // --- natural (7 photos) ---
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520946224545665175/15ea8b6c80397356b9677e5ac53edafd.png?ex=6a430b0d&is=6a41b98d&hm=c4d574dd6e868dcc5a9e4515db7779b1f9d38c55ccb0cbf315c76a2c7a85314e&", tag: "natural" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520946263183458434/925eac7cfe410e5a4865b5adb8863db0.png?ex=6a430b16&is=6a41b996&hm=b4d7776ac88835e555244114c9bec1b8890f15bd19a867c5b6f2ae4956a6f343&", tag: "natural" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520946314051981604/406afee6afd44a5750f94817a17ebdae.png?ex=6a430b23&is=6a41b9a3&hm=d98c9b154c6d619219a2a6933b01ad9ff248782c69a9c13715a08666581a1802&", tag: "natural" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520946344221736980/50cd13d51cd2c13440407a1fa697dd4d.png?ex=6a430b2a&is=6a41b9aa&hm=ebb24f4319e85c9ce91d623ff5ce1af3edddf332ed89e5fb8f23628c0e4ecd87&", tag: "natural" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520946357702099114/8e895d8a008b73c6d0083e8369c25a36.png?ex=6a430b2d&is=6a41b9ad&hm=41ef7ef89b2286c65aba9f6516a65218e98a7dc0db4ef18549f93d77a1c192b6&", tag: "natural" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520946381349720264/faaf5920ceed1790ea4c259bb7d5ae13.png?ex=6a430b33&is=6a41b9b3&hm=7edc2faeed02037001b6f053554b8e436bce48559e54dff56fe586243e79bc85&", tag: "natural" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520946408965017661/5c4f1c7c82c497bad287591da73b7f2b.png?ex=6a430b39&is=6a41b9b9&hm=7f7ef45247d622a47b9e5595e16607e938e7a1711f3e63baea6aae350f769ee9&", tag: "natural" },
+
+  // --- sporty (7 photos) ---
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520946436181856397/e824147ce9d801b42cba7c67c1e1879c.png?ex=6a430b40&is=6a41b9c0&hm=6642d16ad3fa067858e2ab56b7b141380e41db567629d8e780870b5cfdcd6602&", tag: "sporty" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520946459128758333/bf37dddb315be86ebe2566a0a4fd3754.png?ex=6a430b45&is=6a41b9c5&hm=a01b7aa74c5bfa382a73372f190c8d09566f38c5e3c8e17d0305ab85be75ac50&", tag: "sporty" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520946507849928876/2e9f168a48ec7f102614db2350cbf700.png?ex=6a430b51&is=6a41b9d1&hm=93df10b575551093f8944479fc8d35b49eea3fa776f834c1df495c65b9fdd9c1&", tag: "sporty" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520957597912404019/02ad8ebfe40af2c3fbaec900c5f27a33.png?ex=6a4315a5&is=6a41c425&hm=31697b2492aff65302e7b8c756e2e20e4b60bcfffd0b371251fe8cfc996cd68a&", tag: "sporty" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520946561599799406/0853dcb766b10b4ff5f92d75f273050f.png?ex=6a430b5e&is=6a41b9de&hm=ef44a3f9b0d8bded8d43f8db20fee403191ec0125df887ca9b7b5f03e29de821&", tag: "sporty" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520946583548727427/22291d81178510f23eea265141aaa412.png?ex=6a430b63&is=6a41b9e3&hm=ce93ecc253aea4d79f6dc3c09c1fd51974e1dc255ef80c6f3cf34388781cee4d&", tag: "sporty" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520946605748916345/53a75ed91044e3691302f8b2a15e1a00.png?ex=6a430b68&is=6a41b9e8&hm=562b8d85bb2f9a214aab7077f6190752fea9b917415220ce3a66d20a55e4407e&", tag: "sporty" },
+
+  // --- bonus (7 photos — add src URLs below) ---
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520946538728132690/93691461917452405672c06f3c7a1b6b.png?ex=6a430b58&is=6a41b9d8&hm=4c73828d4dd894da7953ae342f02d925de10afa58489fc1d85b7d132b48911cf&", tag: "goth" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520946193608474624/5d0a9a436fdd55ffc5ff810ebd625bc3.png?ex=6a430b06&is=6a41b986&hm=26c39708c61c5aba8a57fac55ddeff892260b8d2204f88f4b3a1b7a31ac23d0e&", tag: "preppy" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520957629835509922/ceba907cf55e3e73009ee8b1305e1859.png?ex=6a4315ac&is=6a41c42c&hm=0d4be390ae4f3cf26ddf6e744bf782dd10656049ef939b919dcf6b436b931660&", tag: "natural" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520957643739496548/2d77c437a817b6cdd2fe6c051c23dd88.png?ex=6a4315b0&is=6a41c430&hm=57f63a333d4903ff1eefc983e3f059704a514f1a49a923b01f7c65de320bab44&", tag: "sporty" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520957662919917598/05defbd873c1394207825881687d5c30.png?ex=6a4315b4&is=6a41c434&hm=f2369808b6ede5b6b79cf26d19968a072ce18e04564fca6c2c8c3a193bfa7705&", tag: "goth" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520957682821890108/fbf2f0f593d2410e6b45b8c6f1ddf58d.png?ex=6a4315b9&is=6a41c439&hm=ef8e5237aca3aaebc92b2a72306ca4b4a883b8684d8a309f2431e7205d46bd91&", tag: "preppy" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520957580195660008/1e764f91bccb7380bfdb31fa4df6d582.png?ex=6a4315a1&is=6a41c421&hm=9b2093b5746d9a1e3085d5c17f68342e85a66606d6b67b436117fd843668633e&", tag: "natural" },
+];
+
+// ============================================================
+// PHOTOS_B — Alt mode (ctrl+click) — 35 photos
+// Same format as above. Tags can be anything you want.
+// NOTE: Photos 1-11 (index 0-10) are shuffled randomly each run.
+// ============================================================
+const PHOTOS_B = [
+  // --- grunge (7 photos) ---
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520969808617672785/TedAllen2012.png?ex=6a432104&is=6a41cf84&hm=a8f902ed2d34e6a3a1b3114209d19051fa96731da4780342581443b37031e22f&", tag: "grunge" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520969821167161464/IMG_3056.png?ex=6a432107&is=6a41cf87&hm=bdc7b8dffa8c9c931259045672ce01c613d7966942c41a38a1a04020f4ad6431&", tag: "grunge" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520969834299523264/64f203d2e5db5.image.png?ex=6a43210a&is=6a41cf8a&hm=8f50e12d0b79ea8a611ed1cfee516575c2e3e418292526afda5b3072362f72c5&", tag: "grunge" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520968342184136724/f87.png?ex=6a431fa7&is=6a41ce27&hm=c5322fcc1839e27ee1763fd192d622ba386097cb141b1368c9a5e69afc353b6a&", tag: "grunge" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520968359384977488/f39.png?ex=6a431fab&is=6a41ce2b&hm=1618739d231997ed26bc3b9d417953a70fb86b94d1d9a087f80098fa73f76e8c&", tag: "grunge" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520968381061140480/f1.png?ex=6a431fb0&is=6a41ce30&hm=02eadfdc3d625802b33b79ccbaaf61c91baa025b07e8fe725e4af0f1b51bf972&", tag: "grunge" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520968405023461607/f92.png?ex=6a431fb5&is=6a41ce35&hm=0b29dcbcdced143afa7b63af37df1d26a66a1057d0fcc75926b41e57e2488a8c&", tag: "grunge" },
+
+  // --- alternative (7 photos) ---
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520968574888313003/f15.png?ex=6a431fde&is=6a41ce5e&hm=4d43e5acca3563149145cd5ce6808dd16dca7587337114f5d48aac6be1949b0b&", tag: "alternative" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520968591682306099/f11.png?ex=6a431fe2&is=6a41ce62&hm=f72c842119b846c4640c08db1e5efa24c5c5c4236a07aa7f37685ac150eb0c15&", tag: "alternative" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520968623991033907/f116.png?ex=6a431fea&is=6a41ce6a&hm=3ca70d73fd2891cc59223a369c2ce4697a5432f65d6d4a442ba32343e8ad0916&", tag: "alternative" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520968640957124688/f7.png?ex=6a431fee&is=6a41ce6e&hm=27aee5dde8fd6262fac74dd9f76f4e3ea2f09a5eb958ae6ff9ce10f83c7a01e5&", tag: "alternative" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520968713946402916/c813e264f2e1baa5826d88201f9db6d9.png?ex=6a431fff&is=6a41ce7f&hm=5a4c6cc92c8bcb6dc3b8e2e9334f7ddffc6def0921f327551457b13f00c5bf91&", tag: "alternative" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520968740739612692/4ab9c87d9753f8c781114fb544310231.png?ex=6a432006&is=6a41ce86&hm=df8c858be77ab8c494abd5f74ad12ebafa16d3dcfd8093cd3108cac681ae8b1b&", tag: "alternative" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520968763246121111/2844935c09f08a9b9bb69717f058cf13.png?ex=6a43200b&is=6a41ce8b&hm=3d5fb96d742af0724dac177b63d501424e51da6602366c3f2a4a48fc798b0485&", tag: "alternative" },
+
+  // --- indie (7 photos) ---
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520968787673874592/7202e4dce51fda75003b6013c024947d.png?ex=6a432011&is=6a41ce91&hm=3cd60b9d6271e5b6f660c1104d3f1ea761cdbe3e6f932647b22823fc016c352f&", tag: "indie" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520968850051698718/7862b7a84d6ae8a30941772e8a1d3690.png?ex=6a432020&is=6a41cea0&hm=d72366f12590a54f721cf979606895ab237151555d67a08e3effa34819b18690&", tag: "indie" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520968870364577874/1f3bf458275ea8f3498af0cef78b8935.png?ex=6a432024&is=6a41cea4&hm=2c9fdbffac8375d105f5134c3d65f1d7651265dd016ea6b882f283fda1354b77&", tag: "indie" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520968887745642606/8ddbd7b82671b690daeff3dbdf4241c4.png?ex=6a432029&is=6a41cea9&hm=41f191219be3b9da56dbe39dcfc5508dfe7d2f0f7a17933732c174a746df72f3&", tag: "indie" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520968921057071246/ef91335d1ebb408f261549c4e1be00f3.png?ex=6a432031&is=6a41ceb1&hm=fbd9a51f4291d23de8b2a33d89714644521b9919d1bb7e521202312c72345bbd&", tag: "indie" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520968936923857049/5d260524b790cf83bf5baae48b6fbc31.png?ex=6a432034&is=6a41ceb4&hm=90cf97763ea73c521e9a5352eb93d62840d5238308382115ae3185dd20719ef5&", tag: "indie" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520968954779009246/4960ae0235bb5d9e2ec4e21917ae5d75.png?ex=6a432039&is=6a41ceb9&hm=a3c215eb8305c52e051a36ea941d8259afec545603c8887902e8562b9b7a0f96&", tag: "indie" },
+
+  // --- streetwear (7 photos) ---
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520968983933620294/41194cf58ca395cbe64cf4b85cdf7528.png?ex=6a432040&is=6a41cec0&hm=2a87c852ba77850e5f176775a6563f36f5673eca75b3796ee17ba6de18d4decf&", tag: "streetwear" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520969016598855840/92c910343a26eed8ede3de6f0a254a92.png?ex=6a432047&is=6a41cec7&hm=a745512bfc478c0f50f55cd709066bb62b2e7c5a53e7210e54042dd1a15bdb27&", tag: "streetwear" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520969052493844622/b50f5bf4e090f2b19b644124e4d611dd.png?ex=6a432050&is=6a41ced0&hm=17e1b603050b635fe94e009849ae15b6c4dbc078307793762983e5a79e29fab1&", tag: "streetwear" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520969075650592868/41c27abe56584246ace74b2289a00cea.png?ex=6a432055&is=6a41ced5&hm=173af145b04bac04d73e10c8fa42ef1abc1820f0e5b11be6b92a0d917332a5de&", tag: "streetwear" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520969102787870921/e74e02e5f791237a77274ade28eb65b2.png?ex=6a43205c&is=6a41cedc&hm=e913853d5843f35b05175887682650b31f2b5fc4e29823cd63e7bb2bf6971df9&", tag: "streetwear" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520969145447878666/04e4aa27642aeda77994be01454fdfb5.png?ex=6a432066&is=6a41cee6&hm=0706b99d9d772b133bf39785e89584960c28bc5021eb052df059bac3de2b964a&", tag: "streetwear" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520969179434324119/2e5f5d78a510f34fd37e90cb706f7e22.png?ex=6a43206e&is=6a41ceee&hm=09082cbdb844c80bae07c89ed6c97e573c27f772c20cd3d2790eb82003e97c50&", tag: "streetwear" },
+
+  // --- bonus (7 photos — add src URLs below) ---
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520969207305474190/d53aa35bb2a5544bb191b40f6ee3f21e.png?ex=6a432075&is=6a41cef5&hm=67f0b31d5036e9153e657e9ab4be92a88d43e50a111935ffd57960ae8b970649&", tag: "grunge" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520969233197039667/5e2f32f3806b0d981a12e5a2a2009814.png?ex=6a43207b&is=6a41cefb&hm=6823dbe310893277751c7b36de16a253e6f7409d4fe9745fb5d1cae7e61bcddb&", tag: "alternative" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520969291564974222/8a7ffe18ea3aa4784c864386b7ece520.png?ex=6a432089&is=6a41cf09&hm=a40f45397e77158e30ad16b875e83654cce4aa3500b82b17871684698e1f6cfd&", tag: "indie" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520969327669674024/n3y2RQAAAAZJREFUAwDFr2x6XE3TjgAAAABJRU5ErkJggg.png?ex=6a432091&is=6a41cf11&hm=cf5a144a45e05ad01bd87ab5c78842eca3fd2a99343212293e9fb2bfefe99496&", tag: "streetwear" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520969351853773035/c9c6c5ed680d5d810b6c7c5d2138bc4f.png?ex=6a432097&is=6a41cf17&hm=c1ab63e7e543558b248eecfc93866d1e4c518658c97d4fc7a3e1af657605d860&", tag: "grunge" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520969386138144808/2063f212ffcab76bd820161d365d777a.png?ex=6a43209f&is=6a41cf1f&hm=3213a8f76d02dbe9332f50abe53168e16d93fa05c12e57e5a9427cdb9ea04ce9&", tag: "alternative" },
+  { src: "https://cdn.discordapp.com/attachments/1155166606360576010/1520969368861933779/4c1cade59069b3fadf657047b668d8dc.png?ex=6a43209b&is=6a41cf1b&hm=eefaf71d2ed71980c0f61b0691d3aaf702d4fff2ff1310e57c955868345cf8ae&", tag: "indie" },
+];
+
+// ============================================================
+// PHOTOS_C — Shift mode (shift+click) — 35 photos
+// Same format as above. Tags can be anything you want.
+// NOTE: Photos 1-11 (index 0-10) are shuffled randomly each run.
+// The rigged result for this mode is: type1 (change in showShiftResults)
+// ============================================================
+const PHOTOS_C = [
+  // --- type1 (7 photos — fill in src URLs, rename tags as needed) ---
+  { src: "", tag: "type1" },
+  { src: "", tag: "type1" },
+  { src: "", tag: "type1" },
+  { src: "", tag: "type1" },
+  { src: "", tag: "type1" },
+  { src: "", tag: "type1" },
+  { src: "", tag: "type1" },
+
+  // --- type2 (7 photos) ---
+  { src: "", tag: "type2" },
+  { src: "", tag: "type2" },
+  { src: "", tag: "type2" },
+  { src: "", tag: "type2" },
+  { src: "", tag: "type2" },
+  { src: "", tag: "type2" },
+  { src: "", tag: "type2" },
+
+  // --- type3 (7 photos) ---
+  { src: "", tag: "type3" },
+  { src: "", tag: "type3" },
+  { src: "", tag: "type3" },
+  { src: "", tag: "type3" },
+  { src: "", tag: "type3" },
+  { src: "", tag: "type3" },
+  { src: "", tag: "type3" },
+
+  // --- type4 (7 photos) ---
+  { src: "", tag: "type4" },
+  { src: "", tag: "type4" },
+  { src: "", tag: "type4" },
+  { src: "", tag: "type4" },
+  { src: "", tag: "type4" },
+  { src: "", tag: "type4" },
+  { src: "", tag: "type4" },
+
+  // --- bonus (7 photos) ---
+  { src: "", tag: "type1" },
+  { src: "", tag: "type2" },
+  { src: "", tag: "type3" },
+  { src: "", tag: "type4" },
+  { src: "", tag: "type1" },
+  { src: "", tag: "type2" },
+  { src: "", tag: "type3" },
+];
+
+var participant = {};
+var current = 0;
+var ratings = [];
+var altMode = false;
+var shiftMode = false;
+var PHOTOS = PHOTOS_A;
+
+function showPage(id) {
+  document.getElementById('page-intake').style.display = 'none';
+  document.getElementById('page-photo').style.display = 'none';
+  document.getElementById('page-result').style.display = 'none';
+  document.getElementById(id).style.display = 'block';
+}
+
+function startAssessment(e) {
+  altMode = e && e.ctrlKey;
+  shiftMode = e && e.shiftKey;
+  var basePhotos = shiftMode ? PHOTOS_C : (altMode ? PHOTOS_B : PHOTOS_A);
+
+  var name = document.getElementById('inp-name').value;
+  var age = parseInt(document.getElementById('inp-age').value);
+  var pref = document.querySelector('input[name="pref"]:checked').value;
+
+  if (!name || isNaN(age) || age < 1 || age > 120) {
+    document.getElementById('err-intake').style.display = 'block';
+    return;
+  }
+  document.getElementById('err-intake').style.display = 'none';
+
+  participant = { name: name, age: age, pref: pref };
+
+  // Shuffle only the first 11 photos, keep the rest in order
+  var pool = basePhotos.slice(0, 11);
+  for (var s = pool.length - 1; s > 0; s--) {
+    var r = Math.floor(Math.random() * (s + 1));
+    var tmp = pool[s]; pool[s] = pool[r]; pool[r] = tmp;
+  }
+  PHOTOS = pool.concat(basePhotos.slice(11));
+
+  ratings = [];
+  for (var i = 0; i < PHOTOS.length; i++) { ratings.push(null); }
+  current = 0;
+
+  renderPhoto();
+  showPage('page-photo');
+}
+
+function renderPhoto() {
+  var photo = PHOTOS[current];
+  var total = PHOTOS.length;
+  var num = current + 1;
+
+  document.getElementById('progress-label').textContent = 'Photo ' + num + ' of ' + total;
+  document.getElementById('photo-label').textContent = 'Photo ' + num + ' of ' + total;
+
+  var pct = Math.round((num / total) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+
+  var container = document.getElementById('photo-container');
+  if (photo.src) {
+    container.innerHTML = '<img src="' + photo.src + '" style="max-width:100%; max-height:100%; object-fit:contain; display:block;">';
+  } else {
+    container.innerHTML = '<p style="font-family:Arial; color:#aaa; font-size:13px;">[photo ' + num + ']</p>';
+  }
+
+  document.getElementById('btn-back-photo').disabled = (current === 0);
+  document.getElementById('btn-back-photo').style.opacity = (current === 0) ? '0.4' : '1';
+  document.getElementById('btn-next-photo').value = (current === total - 1) ? 'See Results >>' : 'Next >>';
+
+  var saved = ratings[current];
+  var html = '';
+  for (var i = 1; i <= 10; i++) {
+    var bg = (saved === i) ? 'purple' : '#eee';
+    var col = (saved === i) ? 'white' : '#333';
+    var bord = (saved === i) ? 'purple' : '#aaa';
+    html += '<input type="button" value="' + i + '" onclick="selectRating(' + i + ')" '
+          + 'style="width:40px; height:40px; margin:3px; font-family:Arial; font-size:14px; font-weight:bold; '
+          + 'background:' + bg + '; color:' + col + '; border:2px solid ' + bord + '; cursor:pointer;">';
+  }
+  document.getElementById('scale-buttons').innerHTML = html;
+
+  updateScaleNote(saved);
+  document.getElementById('err-photo').style.display = 'none';
+}
+
+function selectRating(val) {
+  ratings[current] = val;
+  renderPhoto();
+}
+
+function updateScaleNote(val) {
+  var notes = ['','Not attractive at all','Very unattractive','Unattractive','Slightly unattractive','Neutral','Slightly attractive','Attractive','Very attractive','Highly attractive','Extremely attractive!!'];
+  var el = document.getElementById('scale-note');
+  if (val) {
+    el.textContent = val + ' - ' + notes[val];
+  } else {
+    el.textContent = '-- nothing selected yet --';
+  }
+}
+
+function nextPhoto() {
+  if (ratings[current] === null) {
+    document.getElementById('err-photo').style.display = 'block';
+    return;
+  }
+  if (current < PHOTOS.length - 1) {
+    current++;
+    renderPhoto();
+  } else {
+    showResults();
+  }
+}
+
+function prevPhoto() {
+  if (current > 0) {
+    current--;
+    renderPhoto();
+  }
+}
+
+function showResults() {
+  var total = 0;
+  for (var i = 0; i < ratings.length; i++) { total += ratings[i]; }
+  var overall = (total / ratings.length).toFixed(1);
+
+  if (shiftMode) {
+    showShiftResults(parseFloat(overall));
+  } else if (altMode) {
+    showAltResults(parseFloat(overall));
+  } else {
+    showRiggedResults(parseFloat(overall));
+  }
+}
+
+function buildTagData() {
+  var tagData = {};
+  for (var i = 0; i < PHOTOS.length; i++) {
+    var t = PHOTOS[i].tag;
+    if (!tagData[t]) tagData[t] = { scores: [], count: 0, total: 0, avg: 0 };
+    tagData[t].scores.push(ratings[i]);
+    tagData[t].count++;
+    tagData[t].total += ratings[i];
+  }
+  var winner = null, winnerTotal = -1;
+  for (var tag in tagData) {
+    tagData[tag].avg = (tagData[tag].total / tagData[tag].count).toFixed(1);
+    if (tagData[tag].total > winnerTotal) { winnerTotal = tagData[tag].total; winner = tag; }
+  }
+  return { tagData: tagData, winner: winner };
+}
+
+function renderResultsPage(overall, tagData, winner) {
+  document.getElementById('result-meta').innerHTML =
+    'Name: ' + participant.name + '<br>' +
+    'Age: ' + participant.age + '<br>' +
+    'Preference: ' + participant.pref + '<br>' +
+    'Photos rated: ' + PHOTOS.length + '<br>' +
+    'Average score: ' + overall + ' / 10';
+
+  document.getElementById('verdict-type').textContent = capitalize(winner);
+  document.getElementById('verdict-sub').textContent = 'highest total score across ' + tagData[winner].count + ' photos';
+
+  document.querySelector('#score-table thead tr').innerHTML =
+    '<th>Type</th><th>Photos</th><th>Avg Score</th><th>Total</th>';
+
+  var tbody = document.getElementById('score-tbody');
+  tbody.innerHTML = '';
+  var tags = Object.keys(tagData).sort(function(a,b){ return tagData[b].total - tagData[a].total; });
+  for (var j = 0; j < tags.length; j++) {
+    var tg = tags[j];
+    var d = tagData[tg];
+    var tr = document.createElement('tr');
+    if (tg === winner) tr.style.backgroundColor = '#e8d5ff';
+    tr.innerHTML = '<td>' + capitalize(tg) + (tg === winner ? ' *' : '') + '</td>'
+      + '<td align="center">' + d.count + '</td>'
+      + '<td align="center">' + d.avg + '</td>'
+      + '<td align="center">' + d.total + '</td>';
+    tbody.appendChild(tr);
+  }
+
+  showPage('page-result');
+}
+
+function showRiggedResults(overall) {
+  var result = buildTagData();
+  // Always force goth as the winner regardless of actual scores
+  result.tagData['goth'].total = 999;
+  result.tagData['goth'].avg = (999 / result.tagData['goth'].count).toFixed(1);
+  renderResultsPage(overall, result.tagData, 'goth');
+}
+
+function showAltResults(overall) {
+  var result = buildTagData();
+  // Always force alternative as the winner regardless of actual scores
+  result.tagData['alternative'].total = 999;
+  result.tagData['alternative'].avg = (999 / result.tagData['alternative'].count).toFixed(1);
+  renderResultsPage(overall, result.tagData, 'alternative');
+}
+
+function showShiftResults(overall) {
+  var result = buildTagData();
+  // Always force type1 as the winner — change 'type1' to match your chosen tag name
+  result.tagData['type1'].total = 999;
+  result.tagData['type1'].avg = (999 / result.tagData['type1'].count).toFixed(1);
+  renderResultsPage(overall, result.tagData, 'type1');
+}
+
+function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+function restart() {
+  document.getElementById('inp-name').value = '';
+  document.getElementById('inp-age').value = '';
+  document.querySelector('input[name="pref"][value="female"]').checked = true;
+  showPage('page-intake');
+}
+
+</script>
+
+</body>
+</html>
